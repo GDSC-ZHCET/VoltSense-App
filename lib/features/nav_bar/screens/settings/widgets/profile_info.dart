@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voltsense2/utils/constants/colors.dart';
 
+// ignore: camel_case_types
 class profinfo extends StatelessWidget {
   const profinfo(
       {super.key,

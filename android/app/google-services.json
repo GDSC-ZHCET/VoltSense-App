@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "110999938896",
+    "project_id": "voltsense-9ff7b",
+    "storage_bucket": "voltsense-9ff7b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:110999938896:android:977eef3f32119afd8e2e55",
+        "android_client_info": {
+          "package_name": "com.example.voltsense2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "110999938896-8j1s4vm8qslia6lbr9hfakv67isfkk1q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCX44bi0EduW0eGrIdnSGYjkToAVn1Z120"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "110999938896-8j1s4vm8qslia6lbr9hfakv67isfkk1q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "110999938896-1r1tj41h54qc1v3rlckmt6q8cd4ueg0t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.voltsensee"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:110999938896:android:1dacc345eccafa488e2e55",
+        "android_client_info": {
+          "package_name": "com.example.voltsensee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "110999938896-jkbb6em44fpsmisikrn5apu4vttmqp8h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.voltsensee",
+            "certificate_hash": "480833f363c837e885148144a31147d168cdb688"
+          }
+        },
+        {
+          "client_id": "110999938896-8j1s4vm8qslia6lbr9hfakv67isfkk1q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCX44bi0EduW0eGrIdnSGYjkToAVn1Z120"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "110999938896-8j1s4vm8qslia6lbr9hfakv67isfkk1q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "110999938896-1r1tj41h54qc1v3rlckmt6q8cd4ueg0t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.voltsensee"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -28,7 +28,6 @@ class VCustomcurvedEdges extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(covariant CustomClipper<dynamic> oldClipper) {
-    // TODO: implement shouldReclip
     return true;
   }
 }

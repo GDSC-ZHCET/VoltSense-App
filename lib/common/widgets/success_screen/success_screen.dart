@@ -5,9 +5,14 @@ import 'package:voltsense2/utils/constants/sizes.dart';
 //import 'package:voltsense2/utils/helpers/helper_functions.dart';
 
 class SucessScreen extends StatelessWidget {
-  const SucessScreen({super.key, required this.onPressed});
+  const SucessScreen(
+      {super.key,
+      required this.title,
+      required this.subtitle,
+      required this.onPressed});
 
   final VoidCallback onPressed;
+  final String title, subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -20,18 +25,18 @@ class SucessScreen extends StatelessWidget {
           //Image
 
           //Texts
-          Text("Your account successfully created!",
+          Text(title,
               style: Theme.of(context).textTheme.headlineLarge,
               textAlign: TextAlign.center),
           const SizedBox(height: VSizes.spaceBtwItems),
-          Text('ljs;fjnh,sbgshbgkj,bhfyukgrehjbf,jvbk gfskjfgsd',
+          Text(subtitle,
               style: Theme.of(context).textTheme.labelLarge,
               textAlign: TextAlign.center),
           const SizedBox(height: VSizes.spaceBtwItems),
-          Text('lahfdsa',
+          /*Text('lahfdsa',
               style: Theme.of(context).textTheme.labelMedium,
               textAlign: TextAlign.center),
-          const SizedBox(height: VSizes.spaceBtwSections),
+          const SizedBox(height: VSizes.spaceBtwSections),*/
 
           //Buttons
           SizedBox(
