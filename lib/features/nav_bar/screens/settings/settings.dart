@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:voltsense2/features/authentication/screens/login/login.dart';
 import 'package:voltsense2/features/nav_bar/screens/home/widgets/home.dart';
 import 'package:voltsense2/features/nav_bar/screens/settings/widgets/edit_dialog.dart';
+import 'package:voltsense2/features/nav_bar/screens/settings/widgets/logout.dart';
 import 'package:voltsense2/features/nav_bar/screens/settings/widgets/profile_info.dart';
 import 'package:voltsense2/utils/constants/colors.dart';
 import 'package:voltsense2/utils/constants/sizes.dart';
@@ -194,6 +198,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     },
                   ),
                 ),
+                const SizedBox(height: VSizes.spaceBtwItems),
+                //Add the button at the top
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        showLogOutDialog(
+                          context: context,
+                          onLogOut: () async {
+                            await FirebaseAuth.instance.signOut();
+                            Get.offAll(() => LoginScreen());
+                          },
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 15),
+                          backgroundColor: VColors.primaryColor,
+                          foregroundColor: VColors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          )),
+                      child: Text('Logout'),
+                    )
+                  ],
+                )
               ],
             ),
           ),

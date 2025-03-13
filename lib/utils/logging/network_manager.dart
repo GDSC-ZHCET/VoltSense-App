@@ -18,7 +18,7 @@ class NetworkManager extends GetxController {
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
 
-  ///update teh connection status based on changes in connectivity and show a relevant popup for no internet connection
+  ///update the connection status based on changes in connectivity and show a relevant popup for no internet connection
   Future<void> _updateConnectionStatus(ConnectivityResult results) async {
     _connectionStatus.value = results;
     //results.isNotEmpty ? results.first : ConnectivityResult.none;
