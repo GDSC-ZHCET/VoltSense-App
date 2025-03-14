@@ -1,0 +1,2 @@
+D:/Projects/voltsense2/android/app/.cxx/Debug/6w3e1n32/x86/CMakeFiles/edit_cache.dir
+D:/Projects/voltsense2/android/app/.cxx/Debug/6w3e1n32/x86/CMakeFiles/rebuild_cache.dir

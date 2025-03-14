@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:voltsense2/data/repositories.authentication/user/user_repository.dart';
+//import 'package:get_storage/get_storage.dart';
 import 'package:voltsense2/features/authentication/screens/login/login.dart';
 import 'package:voltsense2/features/nav_bar/screens/home/widgets/home.dart';
 import 'package:voltsense2/features/nav_bar/screens/settings/widgets/edit_dialog.dart';
 import 'package:voltsense2/features/nav_bar/screens/settings/widgets/logout.dart';
 import 'package:voltsense2/features/nav_bar/screens/settings/widgets/profile_info.dart';
+import 'package:voltsense2/features/personalization/controller/user_controller.dart';
 import 'package:voltsense2/utils/constants/colors.dart';
 import 'package:voltsense2/utils/constants/sizes.dart';
 //import 'package:voltsense2/utils/constants/colors.dart';
@@ -49,6 +52,9 @@ import 'package:voltsense2/utils/constants/sizes.dart';
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
+  //static UserRepository get instance => Get.put(UserRepository());
+  //final conroller = Get.find();
+
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -60,6 +66,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = UserController.instance;
+    //final updateController = Get.put(UpdateNameController());
     return Scaffold(
       appBar: AppBar(
         backgroundColor: VColors.primaryColor,
@@ -116,31 +124,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 const SizedBox(height: VSizes.defaultSpace),
-                Container(
-                  width: double.infinity,
-                  height: 50,
-                  //margin: const EdgeInsets.only(top: 1),
-                  padding: const EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    // ignore: deprecated_member_use
-                    color: VColors.primaryColor.withOpacity(0.05),
-                  ),
-                  child: profinfo(
-                      preicon: Icons.person,
-                      title: 'Name',
-                      value: name,
-                      onPressed: () {
-                        showEditDialog(
-                            context: context,
-                            fieldLabel: 'Name',
-                            currentValue: '{new name}',
-                            onSave: (newVal) {
-                              setState(() {
-                                name = newVal;
+                Obx(
+                  () => Container(
+                    width: double.infinity,
+                    height: 50,
+                    //margin: const EdgeInsets.only(top: 1),
+                    padding: const EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      // ignore: deprecated_member_use
+                      color: VColors.primaryColor.withOpacity(0.05),
+                    ),
+                    child: profinfo(
+                        preicon: Icons.person,
+                        title: 'Name',
+                        value: controller.user.value.username,
+                        onPressed: () {
+                          showEditDialog(
+                              context: context,
+                              fieldLabel: 'Username',
+                              titleValue: 'Edit Name',
+                              currentValue: controller.user.value.username,
+                              onSave: (newVal) async {
+                                await UserRepository.instance
+                                    .updateSingleField({'username': newVal});
+                                final updateUser = await UserRepository.instance
+                                    .fetchUserDetails();
+                                controller.user.value = updateUser;
+                                controller.update();
                               });
-                            });
-                      }),
+                        }),
+                  ),
                 ),
                 const SizedBox(height: VSizes.spaceBtwItems),
                 Container(
@@ -156,46 +170,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: profinfo(
                       preicon: Icons.mail,
                       title: 'E-mail',
-                      value: 'your email',
-                      onPressed: () {
-                        showEditDialog(
-                            context: context,
-                            fieldLabel: 'E-mail',
-                            currentValue: email,
-                            onSave: (newVal) {
-                              setState(() {
-                                email = newVal;
-                              });
-                            });
-                      }),
+                      value: controller.user.value.email,
+                      onPressed: () {}),
                 ),
                 const SizedBox(height: VSizes.spaceBtwItems),
-                Container(
-                  width: double.infinity,
-                  height: 50,
-                  //margin: const EdgeInsets.only(top: 1),
-                  padding: const EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    // ignore: deprecated_member_use
-                    color: VColors.primaryColor.withOpacity(0.05),
-                  ),
-                  child: profinfo(
-                    preicon: Icons.call,
-                    title: 'Phone',
-                    value: 'your phone',
-                    onPressed: () {
-                      showEditDialog(
-                        context: context,
-                        fieldLabel: 'Phone',
-                        currentValue: phone,
-                        onSave: (newVal) {
-                          setState(() {
-                            phone = newVal;
-                          });
-                        },
-                      );
-                    },
+                Obx(
+                  () => Container(
+                    width: double.infinity,
+                    height: 50,
+                    //margin: const EdgeInsets.only(top: 1),
+                    padding: const EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      // ignore: deprecated_member_use
+                      color: VColors.primaryColor.withOpacity(0.05),
+                    ),
+                    child: profinfo(
+                      preicon: Icons.call,
+                      title: 'Phone',
+                      value: controller.user.value.phoneNumber,
+                      onPressed: () {
+                        showEditDialog(
+                          context: context,
+                          fieldLabel: 'Phone',
+                          titleValue: 'Edit Phone',
+                          currentValue: controller.user.value.phoneNumber,
+                          onSave: (newVal) async {
+                            //print(controller.user.value.phoneNumber);
+                            await UserRepository.instance
+                                .updateSingleField({'phonenumber': newVal});
+                            final updatedUser = await UserRepository.instance
+                                .fetchUserDetails();
+                            controller.user.value = updatedUser;
+                            controller.update();
+                          },
+                        );
+                      },
+                    ),
                   ),
                 ),
                 const SizedBox(height: VSizes.spaceBtwItems),

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/get_instance.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:voltsense2/features/nav_bar/screens/home/widgets/card.dart';
+import 'package:voltsense2/features/personalization/controller/user_controller.dart';
 //import 'package:iconsax/iconsax.dart';
 //import 'package:voltsense2/common/styles/spacing_styles.dart';
 //import 'package:voltsense2/common/widgets/custom_shapes/curved_edges/curved_edges.dart';
@@ -11,6 +15,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(UserController());
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: VColors.primaryColor,
@@ -35,16 +41,31 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Welcome Back,\nUSER',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineLarge
-                                ?.copyWith(
-                                  fontFamily: 'Lato',
-                                  fontWeight: FontWeight.w500, // SemiBold
-                                  color: Colors.white,
+                          child: Row(
+                            children: [
+                              Text('Welcome ',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineLarge
+                                      ?.copyWith(
+                                        fontFamily: 'Lato',
+                                        fontWeight: FontWeight.w500, // SemiBold
+                                        color: Colors.white,
+                                      )),
+                              Obx(
+                                () => Text(
+                                  controller.user.value.username,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineLarge
+                                      ?.copyWith(
+                                        fontFamily: 'Lato',
+                                        fontWeight: FontWeight.w500, // SemiBold
+                                        color: Colors.white,
+                                      ),
                                 ),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(height: 10),

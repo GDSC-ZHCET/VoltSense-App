@@ -1,4 +1,5 @@
 //import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -28,21 +29,37 @@ class LoginController extends GetxController {
       final isConnected = await NetworkManager.instance.isConnected();
       if (!isConnected) {
         VFullScreenLoader.stopLoadingDialog();
+        VLoaders.errorSnackBar(
+            title: 'No Internet',
+            message: 'Please check your internet connection.');
         return;
       }
       //form validation
-      if (!loginFormKey.currentState!.validate()) {
-        VFullScreenLoader.stopLoadingDialog();
-        return;
-      }
+      //if (!loginFormKey.currentState!.validate()) {
+      //  VFullScreenLoader.stopLoadingDialog();
+      //  return;
+      //}
+
       //Save Data if remember me is selected
       if (rememberMe.value) {
         localStorage.write('REMEMBER_ME_EMAIL', email.text.trim());
         localStorage.write('REMEMBER_ME_PASSWORD', password.text.trim());
       }
       //Login user using EMail & Password Authentication
-      final userCredentials = await AuthenticationRepository.instance
-          .loginWithEmailAndPassword(email.text.trim(), password.text.trim());
+      try {
+        final userCredentials = await AuthenticationRepository.instance
+            .loginWithEmailAndPassword(email.text.trim(), password.text.trim());
+        print("User logged in successfully: ${userCredentials.user?.email}");
+
+        // Remove loader
+        VFullScreenLoader.stopLoadingDialog();
+
+        // Redirect to another screen on successful login
+        AuthenticationRepository.instance.screenRedirect();
+      } on FirebaseAuthException catch (e) {
+        VFullScreenLoader.stopLoadingDialog();
+        VLoaders.errorSnackBar(title: 'Login Failed', message: e.toString());
+      }
 
       //Remove Loader
       VFullScreenLoader.stopLoadingDialog();

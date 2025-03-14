@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 Future<void> showEditDialog({
   required BuildContext context,
   required String fieldLabel,
+  required String titleValue,
   required String currentValue,
   required Function(String) onSave,
 }) async {
@@ -13,10 +14,10 @@ Future<void> showEditDialog({
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: Text('hii'),
+        title: Text(titleValue),
         content: TextField(
           controller: controller,
-          decoration: InputDecoration(hintText: 'hii'),
+          decoration: InputDecoration(hintText: ''),
         ),
         actions: [
           TextButton(

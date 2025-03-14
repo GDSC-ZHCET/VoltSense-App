@@ -5,7 +5,6 @@ import 'package:voltsense2/common/styles/spacing_styles.dart';
 import 'package:voltsense2/features/authentication/controllers/login/login_controller.dart';
 import 'package:voltsense2/features/authentication/screens/password_configuration/forget_password.dart';
 import 'package:voltsense2/features/authentication/screens/signup/signup.dart';
-import 'package:voltsense2/navigation_menu.dart';
 import 'package:voltsense2/utils/constants/colors.dart';
 import 'package:voltsense2/utils/constants/image_strings.dart';
 import 'package:voltsense2/utils/constants/sizes.dart';
@@ -29,14 +28,15 @@ class LoginScreen extends StatelessWidget {
                   children: [
                     //Logo, Title, Sub-Title
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Image(
-                          height: 150,
+                          height: 120,
                           image: AssetImage(dark
                               ? VImages.darkAppLogo
                               : VImages.lightAppLogo),
                         ),
+                        const SizedBox(height: 10),
                         Text("WelCome Back!",
                             style: Theme.of(context).textTheme.headlineLarge),
                         const SizedBox(height: VSizes.sm),
@@ -113,9 +113,14 @@ class LoginScreen extends StatelessWidget {
                               SizedBox(
                                   width: double.infinity,
                                   child: ElevatedButton(
-                                      onPressed: () =>
-                                          VHelperFunctions.navigateToScreen(
-                                              context, NavigationMenu()),
+                                      onPressed: () {
+                                        if (controller
+                                            .loginFormKey.currentState!
+                                            .validate()) {
+                                          //if the form is valid, attemp login
+                                          controller.emailAndPasswordSignIn();
+                                        }
+                                      },
                                       child: Text("Sign In"))),
                               const SizedBox(height: VSizes.spaceBtwItems),
                               //Create Account Button
@@ -155,6 +160,7 @@ class LoginScreen extends StatelessWidget {
                         )),
                       ],
                     ),
+                    const SizedBox(height: 10),
                     //FOOTER
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
