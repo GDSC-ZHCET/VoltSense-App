@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:voltsense2/data/devices/device_controller/device_controller.dart';
 import 'package:voltsense2/features/nav_bar/screens/home/widgets/card.dart';
 import 'package:voltsense2/features/personalization/controller/user_controller.dart';
 //import 'package:iconsax/iconsax.dart';
@@ -16,6 +17,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(UserController());
+    final deviceController = Get.put(DeviceController());
 
     return Scaffold(
         appBar: AppBar(
@@ -164,37 +166,45 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Padding(
-              padding: const EdgeInsets.all(15),
-              child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                shrinkWrap: true,
-                childAspectRatio: 1.2,
-                children: [
-                  SensorCard(
-                      title: "Voltage",
-                      value: "220V",
-                      icon: Icons.bolt,
-                      color: Colors.orange),
-                  SensorCard(
-                      title: "Current",
-                      value: "5A",
-                      icon: Icons.electric_meter,
-                      color: Colors.blue),
-                  SensorCard(
-                      title: "Power",
-                      value: "1100W",
-                      icon: Icons.power,
-                      color: Colors.green),
-                  SensorCard(
-                      title: "Frequency",
-                      value: "50Hz",
-                      icon: Icons.waves,
-                      color: Colors.purple),
-                ],
-              ),
-            )
+                padding: const EdgeInsets.all(15),
+                child: Obx(() {
+                  final device = deviceController.device.value;
+
+                  //Condition for 'off' status to show 0.0
+                  final voltage = device.status == 'off' ? 0.0 : device.voltage;
+                  final current = device.status == 'off' ? 0.0 : device.current;
+                  final power = device.status == 'off' ? 0.0 : device.power;
+
+                  return GridView.count(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    shrinkWrap: true,
+                    childAspectRatio: 1.2,
+                    children: [
+                      SensorCard(
+                          title: "Voltage",
+                          value: voltage.toString(),
+                          icon: Icons.bolt,
+                          color: Colors.orange),
+                      SensorCard(
+                          title: "Current",
+                          value: current.toString(),
+                          icon: Icons.electric_meter,
+                          color: Colors.blue),
+                      SensorCard(
+                          title: "Power",
+                          value: power.toString(),
+                          icon: Icons.power,
+                          color: Colors.green),
+                      SensorCard(
+                          title: "Frequency",
+                          value: "50Hz",
+                          icon: Icons.waves,
+                          color: Colors.purple),
+                    ],
+                  );
+                }))
           ],
         )));
   }
