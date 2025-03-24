@@ -27,6 +27,18 @@ Future<void> showEditDialog({
             child: Text('Cancel'),
           ),
           ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                (states) => Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white // Dark Mode - White Button
+                    : Colors.black, // Light Mode - Black Button
+              ),
+              foregroundColor: MaterialStateProperty.resolveWith<Color>(
+                (states) => Theme.of(context).brightness == Brightness.dark
+                    ? Colors.black // Dark Mode - Black Text
+                    : Colors.white, // Light Mode - White Text
+              ),
+            ),
             onPressed: () {
               onSave(controller.text);
               Navigator.pop(context);

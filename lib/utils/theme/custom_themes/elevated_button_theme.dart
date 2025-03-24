@@ -8,10 +8,10 @@ class VElevatedButtonTheme {
       style: ElevatedButton.styleFrom(
     elevation: 0,
     foregroundColor: Colors.white,
-    backgroundColor: Colors.blue,
+    backgroundColor: Colors.black,
     disabledForegroundColor: Colors.grey,
-    disabledBackgroundColor: Colors.blue,
-    side: const BorderSide(color: Colors.blue),
+    disabledBackgroundColor: Colors.black.withOpacity(0.5),
+    side: const BorderSide(color: Colors.black),
     padding: const EdgeInsets.symmetric(vertical: 18),
     textStyle: const TextStyle(
         fontSize: 16, color: Colors.white, fontWeight: FontWeight.w600),
@@ -22,14 +22,14 @@ class VElevatedButtonTheme {
   static final darkElevatedButtonTheme = ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
     elevation: 0,
-    foregroundColor: Colors.white,
-    backgroundColor: Colors.blue,
+    foregroundColor: Colors.black,
+    backgroundColor: Colors.white,
     disabledForegroundColor: Colors.grey,
-    disabledBackgroundColor: Colors.blue,
-    side: const BorderSide(color: Colors.blue),
+    disabledBackgroundColor: Colors.white.withOpacity(0.5),
+    side: const BorderSide(color: Colors.black),
     padding: const EdgeInsets.symmetric(vertical: 18),
     textStyle: const TextStyle(
-        fontSize: 16, color: Colors.white, fontWeight: FontWeight.w600),
+        fontSize: 16, color: Colors.black, fontWeight: FontWeight.w600),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
   ));
 }

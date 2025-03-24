@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voltsense2/utils/constants/colors.dart';
+import 'package:voltsense2/utils/helpers/helper_functions.dart';
 
 // ignore: camel_case_types
 class profinfo extends StatelessWidget {
@@ -18,6 +19,7 @@ class profinfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = VHelperFunctions.isDarkMode(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 0),
       child: Row(
@@ -27,7 +29,7 @@ class profinfo extends StatelessWidget {
             child: Icon(
               preicon,
               size: 18,
-              color: VColors.primaryColor,
+              color: dark ? VColors.grey : VColors.black,
             ),
           ),
           Expanded(
@@ -45,7 +47,7 @@ class profinfo extends StatelessWidget {
               child: Icon(
                 icon,
                 size: 20,
-                color: VColors.buttonPrimary,
+                color: dark ? VColors.grey : VColors.black,
               )),
         ],
       ),

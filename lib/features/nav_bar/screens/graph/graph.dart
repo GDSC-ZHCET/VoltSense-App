@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 //import 'package:voltsense2/common/styles/spacing_styles.dart';
 //import 'package:voltsense2/features/nav_bar/screens/home/widgets/home.dart';
 import 'package:voltsense2/utils/constants/colors.dart';
+import 'package:voltsense2/utils/helpers/helper_functions.dart';
 //import 'package:voltsense2/utils/constants/sizes.dart';
 
 /*class Titles {
@@ -46,17 +47,19 @@ class GraphScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = VHelperFunctions.isDarkMode(context);
     return Scaffold(
+      backgroundColor: dark ? VColors.black : VColors.white,
       appBar: AppBar(
-        toolbarHeight: 20,
-        backgroundColor: VColors.primaryColor,
+        toolbarHeight: 0,
+        backgroundColor: dark ? VColors.black : VColors.white,
         automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
-              color: VColors.white,
+              color: dark ? VColors.black : VColors.white,
               padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
               child: SizedBox(
                 width: double.infinity,
@@ -76,12 +79,12 @@ class GraphScreen extends StatelessWidget {
                                 ?.copyWith(
                                   fontFamily: 'Lato',
                                   fontWeight: FontWeight.w600, // SemiBold
-                                  color: VColors.primaryColor,
+                                  color: dark ? VColors.grey : VColors.black,
                                 ),
                           ),
                         ),
                         SizedBox(height: 5),
-                        Align(
+                        /*Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
                             'Stay updated with live data on voltage and current from your sensors',
@@ -95,7 +98,7 @@ class GraphScreen extends StatelessWidget {
                                   color: VColors.primaryColor,
                                 ),
                           ),
-                        ),
+                        ),*/
                         /* Padding(
                           padding: const EdgeInsets.all(20),
                           child: LineGraph(),

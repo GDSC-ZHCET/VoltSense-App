@@ -11,6 +11,7 @@ import 'package:voltsense2/features/nav_bar/screens/settings/widgets/profile_inf
 import 'package:voltsense2/features/personalization/controller/user_controller.dart';
 import 'package:voltsense2/utils/constants/colors.dart';
 import 'package:voltsense2/utils/constants/sizes.dart';
+import 'package:voltsense2/utils/helpers/helper_functions.dart';
 //import 'package:voltsense2/utils/constants/colors.dart';
 //import 'package:voltsense2/utils/constants/sizes.dart';
 
@@ -66,15 +67,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final dark = VHelperFunctions.isDarkMode(context);
     final controller = UserController.instance;
     //final updateController = Get.put(UpdateNameController());
     return Scaffold(
+      backgroundColor: dark ? VColors.black : VColors.white,
       appBar: AppBar(
-        backgroundColor: VColors.primaryColor,
+        backgroundColor: dark ? VColors.black : VColors.white,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           iconSize: 35,
-          color: Colors.white,
+          color: dark ? VColors.grey : VColors.black,
           onPressed: () {
             if (Navigator.canPop(context)) {
               Navigator.pop(context); // Go back if possible
@@ -92,72 +95,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
           style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                 fontFamily: 'Lato',
                 fontWeight: FontWeight.w500, // SemiBold
-                color: Colors.white,
+                color: dark ? VColors.grey : VColors.black,
               ),
         ),
       ),
       body: SingleChildScrollView(
-        child: Container(
-          color: VColors.white,
-          child: Padding(
-            padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
-            child: Column(
-              children: [
-                /*SizedBox(
-                  width: double.infinity,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                  ),
-                ),*/
-                const SizedBox(
-                  height: VSizes.spaceBtwSections,
+        child: Padding(
+          padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+          child: Column(
+            children: [
+              /*SizedBox(
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                 ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'User Account',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w500, // SemiBold
-                          color: VColors.primaryColor,
-                        ), //TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  ),
+              ),*/
+              const SizedBox(
+                height: VSizes.spaceBtwSections,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'User Account',
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w500, // SemiBold
+                        color: dark ? VColors.grey : VColors.black,
+                      ), //TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
-                const SizedBox(height: VSizes.defaultSpace),
-                Obx(
-                  () => Container(
-                    width: double.infinity,
-                    height: 50,
-                    //margin: const EdgeInsets.only(top: 1),
-                    padding: const EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      // ignore: deprecated_member_use
-                      color: VColors.primaryColor.withOpacity(0.05),
-                    ),
-                    child: profinfo(
-                        preicon: Icons.person,
-                        title: 'Name',
-                        value: controller.user.value.username,
-                        onPressed: () {
-                          showEditDialog(
-                              context: context,
-                              fieldLabel: 'Username',
-                              titleValue: 'Edit Name',
-                              currentValue: controller.user.value.username,
-                              onSave: (newVal) async {
-                                await UserRepository.instance
-                                    .updateSingleField({'username': newVal});
-                                final updateUser = await UserRepository.instance
-                                    .fetchUserDetails();
-                                controller.user.value = updateUser;
-                                controller.update();
-                              });
-                        }),
-                  ),
-                ),
-                const SizedBox(height: VSizes.spaceBtwItems),
-                Container(
+              ),
+              const SizedBox(height: VSizes.defaultSpace),
+              Obx(
+                () => Container(
                   width: double.infinity,
                   height: 50,
                   //margin: const EdgeInsets.only(top: 1),
@@ -165,79 +134,137 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     // ignore: deprecated_member_use
-                    color: VColors.primaryColor.withOpacity(0.05),
+                    color: dark
+                        ? VColors.grey.withOpacity(0.05)
+                        : VColors.grey.withOpacity(0.5),
                   ),
                   child: profinfo(
-                      preicon: Icons.mail,
-                      title: 'E-mail',
-                      value: controller.user.value.email,
-                      onPressed: () {}),
-                ),
-                const SizedBox(height: VSizes.spaceBtwItems),
-                Obx(
-                  () => Container(
-                    width: double.infinity,
-                    height: 50,
-                    //margin: const EdgeInsets.only(top: 1),
-                    padding: const EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      // ignore: deprecated_member_use
-                      color: VColors.primaryColor.withOpacity(0.05),
-                    ),
-                    child: profinfo(
-                      preicon: Icons.call,
-                      title: 'Phone',
-                      value: controller.user.value.phoneNumber,
+                      preicon: Icons.person,
+                      title: 'Name',
+                      value: controller.user.value.username,
                       onPressed: () {
                         showEditDialog(
-                          context: context,
-                          fieldLabel: 'Phone',
-                          titleValue: 'Edit Phone',
-                          currentValue: controller.user.value.phoneNumber,
-                          onSave: (newVal) async {
-                            //print(controller.user.value.phoneNumber);
-                            await UserRepository.instance
-                                .updateSingleField({'phonenumber': newVal});
-                            final updatedUser = await UserRepository.instance
-                                .fetchUserDetails();
-                            controller.user.value = updatedUser;
-                            controller.update();
-                          },
-                        );
-                      },
-                    ),
+                            context: context,
+                            fieldLabel: 'Username',
+                            titleValue: 'Edit Name',
+                            currentValue: controller.user.value.username,
+                            onSave: (newVal) async {
+                              await UserRepository.instance
+                                  .updateSingleField({'username': newVal});
+                              final updateUser = await UserRepository.instance
+                                  .fetchUserDetails();
+                              controller.user.value = updateUser;
+                              controller.update();
+                            });
+                      }),
+                ),
+              ),
+              const SizedBox(height: VSizes.spaceBtwItems),
+              Container(
+                width: double.infinity,
+                height: 50,
+                padding: const EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  // ignore: deprecated_member_use
+                  color: dark
+                      ? VColors.grey.withOpacity(0.05)
+                      : VColors.grey.withOpacity(0.5),
+                ),
+                child: profinfo(
+                    preicon: Icons.mail,
+                    title: 'E-mail',
+                    value: controller.user.value.email,
+                    onPressed: () {
+                      showEditDialog(
+                        context: context,
+                        fieldLabel: 'Email',
+                        titleValue: 'Edit Email',
+                        currentValue: controller.user.value.email,
+                        onSave: (newVal) async {
+                          //print(controller.user.value.phoneNumber);
+                          await UserRepository.instance
+                              .updateSingleField({'email': newVal});
+                          final updatedUser =
+                              await UserRepository.instance.fetchUserDetails();
+                          controller.user.value = updatedUser;
+                          controller.update();
+                        },
+                      );
+                    }),
+              ),
+              const SizedBox(height: VSizes.spaceBtwItems),
+              Obx(
+                () => Container(
+                  width: double.infinity,
+                  height: 50,
+                  padding: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    // ignore: deprecated_member_use
+                    color: dark
+                        ? VColors.grey.withOpacity(0.05)
+                        : VColors.grey.withOpacity(0.5),
+                  ),
+                  child: profinfo(
+                    preicon: Icons.call,
+                    title: 'Phone',
+                    value: controller.user.value.phoneNumber,
+                    onPressed: () {
+                      showEditDialog(
+                        context: context,
+                        fieldLabel: 'Phone',
+                        titleValue: 'Edit Phone',
+                        currentValue: controller.user.value.phoneNumber,
+                        onSave: (newVal) async {
+                          //print(controller.user.value.phoneNumber);
+                          await UserRepository.instance
+                              .updateSingleField({'phonenumber': newVal});
+                          final updatedUser =
+                              await UserRepository.instance.fetchUserDetails();
+                          controller.user.value = updatedUser;
+                          controller.update();
+                        },
+                      );
+                    },
                   ),
                 ),
-                const SizedBox(height: VSizes.spaceBtwItems),
-                //Add the button at the top
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        showLogOutDialog(
-                          context: context,
-                          onLogOut: () async {
-                            await FirebaseAuth.instance.signOut();
-                            Get.offAll(() => LoginScreen());
-                          },
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 30, vertical: 15),
-                          backgroundColor: VColors.primaryColor,
-                          foregroundColor: VColors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          )),
-                      child: Text('Logout'),
-                    )
-                  ],
-                )
-              ],
-            ),
+              ),
+              const SizedBox(height: VSizes.spaceBtwItems),
+              //Add the button at the top
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      showLogOutDialog(
+                        context: context,
+                        onLogOut: () async {
+                          await FirebaseAuth.instance.signOut();
+                          Get.offAll(() => LoginScreen());
+                        },
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        backgroundColor:
+                            dark ? VColors.buttonDisabled : VColors.black,
+                        foregroundColor:
+                            dark ? VColors.buttonDisabled : VColors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          side: BorderSide(color: VColors.black),
+                        )),
+                    child: Text(
+                      'Logout',
+                      style: TextStyle(
+                          color: dark ? VColors.black : VColors.white),
+                    ),
+                  )
+                ],
+              )
+            ],
           ),
         ),
       ),

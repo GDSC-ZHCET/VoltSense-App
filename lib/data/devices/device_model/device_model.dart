@@ -7,6 +7,7 @@ class DeviceModel {
   final double power;
   String status;
   final String lastUpdated;
+  final String devInsights;
 
   DeviceModel({
     required this.deviceId,
@@ -14,6 +15,7 @@ class DeviceModel {
     required this.current,
     required this.power,
     required this.status,
+    required this.devInsights,
     required this.lastUpdated,
   });
 
@@ -26,6 +28,20 @@ class DeviceModel {
       current: data['current'] ?? 0.0,
       power: data['power'] ?? 0.0,
       status: data['status'] ?? '',
+      devInsights: data['response'] ?? '',
+      lastUpdated: data['last_updated'] ?? '',
+    );
+  }
+
+  // Added fromMap method to convert Map to DeviceModel
+  factory DeviceModel.fromMap(Map<String, dynamic> data) {
+    return DeviceModel(
+      deviceId: data['device_id'] ?? '',
+      voltage: data['voltage'] ?? 0.0,
+      current: data['current'] ?? 0.0,
+      power: data['power'] ?? 0.0,
+      status: data['status'] ?? '',
+      devInsights: data['response'] ?? '',
       lastUpdated: data['last_updated'] ?? '',
     );
   }
@@ -38,6 +54,7 @@ class DeviceModel {
       'current': current,
       'power': power,
       'status': status,
+      'response': devInsights,
       'last_updated': lastUpdated,
     };
   }

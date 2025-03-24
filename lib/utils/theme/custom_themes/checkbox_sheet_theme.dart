@@ -32,7 +32,7 @@ class VCheckboxTheme {
     }),
     fillColor: WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.selected)) {
-        return Colors.blue;
+        return Colors.grey;
       } else {
         return Colors.transparent;
       }
