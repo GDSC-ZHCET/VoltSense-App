@@ -97,14 +97,15 @@ class LoginScreen extends StatelessWidget {
                                       const Text("Remember me"),
                                     ],
                                   ),
-                                  SizedBox(width: 90),
+                                  SizedBox(width: 50),
 
                                   //Forgot password
+
                                   TextButton(
                                       onPressed: () =>
                                           VHelperFunctions.navigateToScreen(
                                               context, ForgetPassword()),
-                                      child: const Text("Forgot Password"))
+                                      child: const Text("Forgot Password")),
                                 ],
                               ),
                               const SizedBox(height: VSizes.spaceBtwSections),

@@ -2,8 +2,8 @@
 
 class VImages {
   // app logos
-  static const String darkAppLogo = "assets/images/volt_logo.png";
-  static const String lightAppLogo = "assets/images/volt_logo.png";
+  static const String darkAppLogo = "assets/images/Vlogo.jpeg";
+  static const String lightAppLogo = "assets/images/Vlogo.jpeg";
   static const String animationLogo = "assets/images/loader-animation.json";
   static const String docerAnimation = "assets/images/loader_animation.json";
   // other images

@@ -1,4 +1,8 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:voltsense2/features/nav_bar/screens/graph/controller/graph_data_controller.dart';
+import 'package:voltsense2/features/nav_bar/screens/graph/model/data_trend_model.dart';
 //import 'package:fl_chart/fl_chart.dart';
 //import 'package:voltsense2/common/styles/spacing_styles.dart';
 //import 'package:voltsense2/features/nav_bar/screens/home/widgets/home.dart';
@@ -47,7 +51,9 @@ class GraphScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final graphController = Get.find<GraphDataController>();
     final dark = VHelperFunctions.isDarkMode(context);
+
     return Scaffold(
       backgroundColor: dark ? VColors.black : VColors.white,
       appBar: AppBar(
@@ -83,96 +89,72 @@ class GraphScreen extends StatelessWidget {
                                 ),
                           ),
                         ),
-                        SizedBox(height: 5),
-                        /*Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Stay updated with live data on voltage and current from your sensors',
-                            maxLines: 2,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineSmall
-                                ?.copyWith(
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w300, // SemiBold
-                                  color: VColors.primaryColor,
-                                ),
-                          ),
-                        ),*/
-                        /* Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: LineGraph(),
-                        )*/
+                        SizedBox(height: 80),
                       ],
                     ),
                   ],
                 ),
               ),
             ),
+            SizedBox(
+                height: 300,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 8.0, right: 20.0, top: 16.0, bottom: 16.0),
+                  child: Column(
+                    children: [
+                      Expanded(child: buildVoltageChart(graphController)),
+                      const SizedBox(height: 10),
+                      Text('Voltage Trend'),
+                    ],
+                  ),
+                ))
           ],
         ),
       ),
     );
   }
-}
-/*
-class LineGraph extends StatelessWidget {
-  static const List<Color> gradiantColors = [
-    Colors.redAccent,
-    Colors.orangeAccent,
-  ];
-  //const LineGraph({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return LineChart(
-      LineChartData(
-        titlesData: Titles.getTitleData(),
-        // Add other required named arguments here
-        minX: 0,
-        maxX: 11,
-        minY: 0,
-        maxY: 7000,
-        //titlesData: Titles.getTitleData(),
-        gridData: FlGridData(
-          show: true,
-          getDrawingHorizontalLine: (value) {
-            return FlLine(
-              color: const Color(0xff37434d),
-              strokeWidth: 1,
-            );
-          },
-        ),
-        borderData: FlBorderData(
-          show: true,
-          border: Border.all(color: Colors.grey, width: 2),
-        ),
-        lineBarsData: [
-          LineChartBarData(
-            spots: [
-              FlSpot(0, 3000),
-              FlSpot(2.5, 10000),
-              FlSpot(4, 5000),
-              FlSpot(6, 43000),
-              FlSpot(8, 40000),
-              FlSpot(9, 30000),
-              FlSpot(11, 38000),
-            ],
-            isCurved: true,
-            gradient: LinearGradient(colors: gradiantColors),
-            barWidth: 5,
-            belowBarData: BarAreaData(
-              show: true,
-              // ignore: deprecated_member_use
-              gradient: LinearGradient(
-                  colors: gradiantColors
-                      // ignore: deprecated_member_use
-                      .map((color) => color.withOpacity(0.3))
-                      .toList()),
-            ),
-          )
-        ],
-      ),
-    );
+  Widget buildVoltageChart(GraphDataController graphController) {
+    return StreamBuilder<List<TrendData>>(
+        stream: graphController.voltageValueList.stream,
+        builder: (context, snapshot) {
+          try {
+            if (snapshot.hasData) {
+              return LineChart(
+                LineChartData(
+                    lineBarsData: [
+                      LineChartBarData(
+                        show: true,
+                        //spots: [
+                        //  FlSpot(1, 220),
+                        //  FlSpot(2, 225),
+                        //  FlSpot(3, 230),
+                        //  FlSpot(4, 228),
+                        //  FlSpot(5, 232),
+                        //  FlSpot(6, 235),
+                        //],
+                        spots: snapshot.data!
+                            .map((trendData) =>
+                                FlSpot(trendData.time, trendData.voltage))
+                            .toList(),
+                        isCurved: true,
+                        barWidth: 3,
+                      ),
+                    ],
+                    titlesData: FlTitlesData(
+                        show: true,
+                        topTitles: AxisTitles(
+                          sideTitles: SideTitles(showTitles: false),
+                        ),
+                        rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false)))),
+              );
+            }
+          } catch (e) {
+            print('no data Found');
+          }
+          return const Center(child: CircularProgressIndicator());
+        });
   }
-}*/
+}

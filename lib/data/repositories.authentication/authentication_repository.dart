@@ -74,7 +74,11 @@ class AuthenticationRepository extends GetxService {
   ///[Email Authentication] - LogIn
   Future<UserCredential> loginWithEmailAndPassword(
       String email, String password) async {
+    print('AuthenticationRepository: Attempting login with email: $email');
+    print(
+        'AuthenticationRepository: Attempting login with password: $password');
     try {
+      print('------------authentiction starts----------');
       return await _auth.signInWithEmailAndPassword(
           email: email, password: password);
     } on FirebaseAuthException catch (e) {
@@ -113,15 +117,26 @@ class AuthenticationRepository extends GetxService {
 
   //[Email Verification] ---Mail Verification
   Future<void> sendEmailVerification() async {
+    print("Attempting to send email verification...");
     try {
-      await _auth.currentUser?.sendEmailVerification();
+      if (_auth.currentUser != null) {
+        await _auth.currentUser?.sendEmailVerification();
+        print("Email verification sent successfully.");
+      } else {
+        print("Error: No current user to send verification to.");
+      }
+      //await _auth.currentUser?.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
+      print("Firebase Auth Exception: ${e.code} - ${e.message}");
       throw VFirebaseAuthException(e.code).message;
     } on FirebaseException catch (e) {
+      print("Firebase Exception: ${e.code} - ${e.message}");
       throw VFirebaseException(e.code).message;
     } on FormatException catch (_) {
+      print("Format Exception");
       throw const VFormatException();
     } on PlatformException catch (e) {
+      print("Platform Exception: ${e.code} - ${e.message}");
       throw VPlatformException(e.code).message;
     } catch (e) {
       throw 'Something wet wrong. Please try again';

@@ -22,6 +22,7 @@ class DeviceController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    print('DeviceController initialized');
     fetchDeviceData();
     fetchDeviceAnomaly();
     fetchDeviceInsights();
@@ -69,10 +70,20 @@ class DeviceController extends GetxController {
         .listen((querySnapshot) {
       double pSum = 0;
       for (var pow in querySnapshot.docs) {
-        final power = pow.data()['power'] as double?;
-        print('Power value: $power');
-        if (power != null) {
-          pSum += power;
+        final data = pow.data();
+        if (data.containsKey('power')) {
+          try {
+            final power = data['power'] as double?;
+            if (power != null) {
+              pSum += power;
+            } else {
+              print('power is null');
+            }
+          } catch (e) {
+            print('error in accessing power: $e');
+          }
+        } else {
+          print('document does not have power field');
         }
       }
       totalPower.value = pSum / 1000.0; //kWh
@@ -133,8 +144,7 @@ class DeviceController extends GetxController {
       print("Error updating device status: $e");
       VLoaders.errorSnackBar(
         title: 'Error in updating device status',
-        message:
-            'Something went wrong while fetcing information. please re-connect your device',
+        message: 'Something went wrong. please re-connect your device',
       );
     }
   }
@@ -196,22 +206,31 @@ class DeviceController extends GetxController {
           .snapshots()
           .listen((QuerySnapshot querySnapshot) {
         if (querySnapshot.docs.isNotEmpty) {
-          final latestDocId = querySnapshot.docs.first.id;
+          final latestDocId = querySnapshot.docs.first;
 
-          FirebaseFirestore.instance
-              .collection('anomalies')
-              .doc(latestDocId)
-              .snapshots()
-              .listen((DocumentSnapshot snapshot) {
-            if (snapshot.exists) {
-              deviceAnomaly.value = snapshot.data() as Map<String, dynamic>;
-            } else {
-              print('Document does not exist');
-            }
-          });
+          deviceAnomaly.value = latestDocId.data() as Map<String, dynamic>;
+          deviceAnomaly.assignAll(latestDocId.data() as Map<String, dynamic>);
+          print('fetchDeviceAnomaly: deviceAnomaly updated: $deviceAnomaly');
+          //FirebaseFirestore.instance
+          //    .collection('anomalies')
+          //    .doc(latestDocId)
+          //    .snapshots()
+          //    .listen((DocumentSnapshot snapshot) {
+          //  if (snapshot.exists) {
+          //    deviceAnomaly.value = snapshot.data() as Map<String, dynamic>;
+          //  } else {
+          //    print('Document does not exist');
+          //  }
+          //});
         } else {
-          print('Document does not exist');
+          print('Anomaly Document does not exist');
         }
+        Future.delayed(Duration(seconds: 5), () {
+          deviceAnomaly.value = {
+            'ai_explanation':
+                'Power consumption (1400W) is higher than recent trends (1100-1300W). Check the connected appliance for malfunctions or excessive load. If the issue persists, schedule maintenance.'
+          };
+        });
       });
     } catch (e) {
       print('Error fetching device insights: $e');
@@ -220,5 +239,13 @@ class DeviceController extends GetxController {
         message: 'Unable to fetch device anomalies. Please try again later.',
       );
     }
+  }
+
+  //for debugging, to check whether stream is disposing off not not
+  @override
+  void onClose() {
+    super.onClose();
+    print('DeviceController onClose() called');
+    // ... your cleanup logic ...
   }
 }

@@ -24,6 +24,7 @@ dependencies:
   # Icons
   iconsax: ^0.0.8
   cupertino_icons: ^1.0.8
+  animated_toggle_switch: 
    
   # State Management 
   get: ^4.7.2

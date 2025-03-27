@@ -47,6 +47,9 @@ class LoginController extends GetxController {
       }
       //Login user using EMail & Password Authentication
       try {
+        print('Attempting to log in with email: ${email.text.trim()}');
+        print('Attempting to log in with password: ${password.text.trim()}');
+
         final userCredentials = await AuthenticationRepository.instance
             .loginWithEmailAndPassword(email.text.trim(), password.text.trim());
         print("User logged in successfully: ${userCredentials.user?.email}");
@@ -57,6 +60,8 @@ class LoginController extends GetxController {
         // Redirect to another screen on successful login
         AuthenticationRepository.instance.screenRedirect();
       } on FirebaseAuthException catch (e) {
+        print('Firebase Auth Error Code: ${e.code}');
+        print('Error Message: ${e.message}');
         VFullScreenLoader.stopLoadingDialog();
         VLoaders.errorSnackBar(title: 'Login Failed', message: e.toString());
       }
@@ -67,6 +72,8 @@ class LoginController extends GetxController {
       //Redirect
       AuthenticationRepository.instance.screenRedirect();
     } catch (e) {
+      print('General Error: $e');
+      print('Error Message: ${e.toString()}');
       VFullScreenLoader.stopLoadingDialog();
       VLoaders.errorSnackBar(title: 'Oh Snap', message: e.toString());
     }

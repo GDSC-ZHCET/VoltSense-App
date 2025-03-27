@@ -9,19 +9,19 @@ import 'firebase_options.dart';
 //import 'package:voltsense2/utils/constants/colors.dart';
 import 'app.dart';
 
-//entry point of flutter app
+//------------------entry point of flutter app---------------------
 Future<void> main() async {
   ///Widgets Binding
   final WidgetsBinding widgetBinding =
       WidgetsFlutterBinding.ensureInitialized();
 
-  ///Local Storage
+  //--------------Local Storage---------------------
   await GetStorage.init();
 
-  ///--Await Native Splash
+  //--------------Await Native Splash---------------
   FlutterNativeSplash.preserve(widgetsBinding: widgetBinding);
 
-  ///--Initialize Firebase and Authentication repository
+  //----------Initialize Firebase and Authentication repository-----------------
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
       .then(
     (FirebaseApp value) => Get.put(AuthenticationRepository()),
