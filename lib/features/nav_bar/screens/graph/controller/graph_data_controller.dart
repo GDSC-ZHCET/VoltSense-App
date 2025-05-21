@@ -1,14 +1,69 @@
+//import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:get/get.dart';
+//import 'package:voltsense2/features/nav_bar/screens/graph/model/data_trend_model.dart';
+//import 'package:voltsense2/utils/constants/loaders.dart';
+//
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-//import 'package:voltsense2/features/nav_bar/screens/graph/data_trend_model.dart';
-import 'package:voltsense2/features/nav_bar/screens/graph/model/data_trend_model.dart';
-import 'package:voltsense2/utils/constants/loaders.dart';
+
+class GraphData {
+  GraphData(
+    this.time,
+    this.voltage,
+    this.current,
+    this.power,
+  );
+
+  final double time;
+  final double voltage;
+  final double current;
+  final double power;
+}
 
 class GraphDataController extends GetxController {
-  static GraphDataController get instance => Get.find();
+  //stream function for VOTAAAAAAAAAAAGEEEEEEEE
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  final FirebaseFirestore _graphFirestoreData = FirebaseFirestore.instance;
+  @override
+  void onInit() {
+    super.onInit();
+    print('GraphDataController initialized');
+  }
+
+  Stream<List<GraphData>> get voltageDataStream {
+    return _firestore
+        .collection('sensorData')
+        .orderBy('timestamp', descending: true)
+        .limit(149)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        final timestampString = data['timestamp'] as String?;
+
+        DateTime dateTime;
+
+        if (timestampString != null) {
+          dateTime = DateTime.tryParse(timestampString) ?? DateTime.now();
+        } else {
+          dateTime = DateTime.now();
+        }
+        return GraphData(
+          dateTime.millisecondsSinceEpoch.toDouble(),
+          (data['voltage'] as num).toDouble(),
+          (data['current'] as num?)?.toDouble() ?? 0.0,
+          (data['power'] as num?)?.toDouble() ?? 0.0,
+        );
+      }).toList();
+    });
+  }
+}
+//class GraphDataController extends GetxController {
+  //GraphDataController get instance => Get.find();
+
+  //RxList<ChartPoint> voltageData = <ChartPoint>[].obs;
+
+/* final FirebaseFirestore _graphFirestoreData = FirebaseFirestore.instance;
 
   RxList<TrendData> voltageValueList = <TrendData>[].obs;
   RxList<TrendData> currentValueList = <TrendData>[].obs;
@@ -26,11 +81,11 @@ class GraphDataController extends GetxController {
 
   void fetchGraphValues() {
     try {
-      print("fetching grap Values...");
+      print("fetching graph Values...");
       FirebaseFirestore.instance
           .collection('sensorData')
           .orderBy('timestamp', descending: true)
-          .limit(6)
+          .limit(10)
           .snapshots()
           .listen((QuerySnapshot snapshot) {
         if (snapshot.docs.isNotEmpty) {
@@ -80,8 +135,8 @@ class GraphDataController extends GetxController {
       });
     } catch (e) {
       VLoaders.errorSnackBar(
-          title: 'error in fetching data',
+          title: 'errrrror',
           message: 'something went wrong in fetching data: $e');
     }
-  }
-}
+  }*/
+//}

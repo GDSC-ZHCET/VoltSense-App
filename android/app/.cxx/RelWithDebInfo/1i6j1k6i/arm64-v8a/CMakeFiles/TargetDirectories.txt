@@ -1,0 +1,2 @@
+D:/Projects/voltsense2/android/app/.cxx/RelWithDebInfo/1i6j1k6i/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/Projects/voltsense2/android/app/.cxx/RelWithDebInfo/1i6j1k6i/arm64-v8a/CMakeFiles/rebuild_cache.dir

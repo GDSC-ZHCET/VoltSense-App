@@ -14,7 +14,7 @@ dependencies:
 
   # Utility Packages 
   http: ^1.1.0
-  intl: ^0.18.1
+  intl: ^0.20.2
   logger: ^2.0.1
   lottie: ^2.7.0
   connectivity_plus: ^5.0.1
@@ -39,6 +39,7 @@ dependencies:
   flutter_native_splash: ^2.4.4
   cloud_firestore: ^5.6.5
   flutter_libphonenumber: ^2.5.1
+  syncfusion_flutter_charts: ^29.2.5
   #google_sign_in: ^6.3.0
   
 

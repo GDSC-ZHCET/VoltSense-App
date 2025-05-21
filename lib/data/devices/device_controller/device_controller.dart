@@ -12,7 +12,7 @@ class DeviceController extends GetxController {
     voltage: 0.0,
     current: 0.0,
     power: 0.0,
-    status: 'off',
+    status: false,
     devInsights: '',
     lastUpdated: '',
   ).obs;
@@ -23,10 +23,15 @@ class DeviceController extends GetxController {
   void onInit() {
     super.onInit();
     print('DeviceController initialized');
-    fetchDeviceData();
+    //print('fetching device data...');
+    //fetchDeviceData();
+    print('fetching device anomaly...');
     fetchDeviceAnomaly();
+    print('fetching device insights...');
     fetchDeviceInsights();
+    print('calculating total power...');
     calculateTotalPowerStream();
+    print('void init called');
   }
 
   // Firestore se device data ko fetch karna
@@ -34,33 +39,22 @@ class DeviceController extends GetxController {
   RxDouble totalPower = 0.0.obs;
 
   //Using streamBuilder function
-  void fetchDeviceData() {
-    try {
-      FirebaseFirestore.instance
-          .collection('sensorData')
-          .orderBy('timestamp', descending: true)
-          .snapshots()
-          .listen((QuerySnapshot snapshot) {
-        if (snapshot.docs.isNotEmpty) {
-          final deviceValues = snapshot.docs.first.data();
-          devValues.value = deviceValues as Map<String, dynamic>;
-
-          print('deviceValues: $deviceValues');
-
-          device.value = DeviceModel.fromMap(deviceValues);
-
-          //---------debuggingg--------
-          print('Device data updated: $deviceValues');
-        } else {
-          print("no data found");
-        }
-      });
-    } catch (e) {
-      print("Error fetching device data: $e");
-      VLoaders.errorSnackBar(
-          title: 'error in fetching data',
-          message: 'Something went wrong while fetching device data.');
-    }
+  Stream<Map<String, dynamic>> get deviceDataStream {
+    return _firestore
+        .collection('sensorData')
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        final data = snapshot.docs.first.data();
+        devValues.value = data;
+        device.value = DeviceModel.fromMap(data);
+        return data;
+      } else {
+        return {};
+      }
+    });
   }
 
   void calculateTotalPowerStream() {
@@ -73,12 +67,8 @@ class DeviceController extends GetxController {
         final data = pow.data();
         if (data.containsKey('power')) {
           try {
-            final power = data['power'] as double?;
-            if (power != null) {
-              pSum += power;
-            } else {
-              print('power is null');
-            }
+            final power = (data['power'] as num).toDouble();
+            pSum += power;
           } catch (e) {
             print('error in accessing power: $e');
           }
@@ -90,56 +80,14 @@ class DeviceController extends GetxController {
       print('Total Power: ${totalPower.value}');
     });
   }
-  /*Future<void> fetchDeviceData() async {
-    try {
-      final deviceSnapshot =
-          await _firestore.collection('devices').doc('ESP32_TEST_DEVICE').get();
-      device(DeviceModel.fromSnapshot(deviceSnapshot));
-      final deviceValues = await _firestore
-          .collection('sensorData')
-          .orderBy('timestamp', descending: true)
-          .get();
-      devValues.value = deviceValues.docs.first.data();
-      print('printing bruh...');
-      print(deviceSnapshot.data());
-      print('another data');
-      print(deviceValues.docs.first.data());
-      print('done prinitng');
-    } catch (e) {
-      print("Error fetching device data: $e");
-    }
-  }*/
 
-  //fetching voltage,current,power from SENSORDATA
-  /*Future<void> fetchDeviceValues() async {
-    try {
-      final deviceValues = await _firestore
-          .collection('sensorData')
-          .where('device_id', isEqualTo: 'ESP32_TEST_DEVICE')
-          .orderBy('timestamp', descending: true)
-          .limit(1)
-          .get();
-      if (deviceValues.docs.isNotEmpty) {
-        device(DeviceModel.fromSnapshot(
-            deviceValues.docs.first as DocumentSnapshot<Object?>));
-        print('Latest sensor data: ${deviceValues.docs.first}');
-      } else {
-        print('No sensor data found for ESP32_TEST_DEVICE');
-      }
-      print('done prinitng');
-    } catch (e) {
-      print("Error fetching device data: $e");
-    }
-  }*/
-
-  //update the device status in Firestore
   Future<void> updateDeviceStatus(String status) async {
     try {
       await _firestore.collection('devices').doc('ESP32_TEST_DEVICE').update({
         'status': status,
       });
       // Optionally update the local 'device' state
-      device.value.status = status;
+      device.value.status = (status.toLowerCase() == 'true');
     } catch (e) {
       print("Error updating device status: $e");
       VLoaders.errorSnackBar(
@@ -156,35 +104,17 @@ class DeviceController extends GetxController {
     try {
       FirebaseFirestore.instance
           .collection('insights')
-          .doc('latest')
+          .orderBy('timestamp', descending: true)
+          .limit(1)
           .snapshots()
-          .listen((DocumentSnapshot snapshot) {
-        if (snapshot.exists) {
-          deviceInsights.value = snapshot.data() as Map<String, dynamic>;
+          .listen((QuerySnapshot snapshot) {
+        if (snapshot.docs.isNotEmpty) {
+          deviceInsights.value =
+              snapshot.docs.first.data() as Map<String, dynamic>;
         } else {
           print('Document does not exist');
         }
       });
-
-      //----------DEBUGGING-------------//
-      //print('run');
-      //if (deviceInsight.exists) {
-      //print('still running....');
-      //final data = deviceInsight.data();
-      //if (data != null) {
-      //deviceInsights.value = data as Map<String, dynamic>;
-      // print(deviceInsight.data());
-      // print('done1');
-      //} else {
-      //  print('document data is null');
-      //}
-      //print(deviceInsights.value);
-      //print('done');
-      //} else {
-      //print('cant running...');
-      //print('Document does not exists');
-      //print('nooo running...');
-      //}
     } catch (e) {
       print('Error fetching device insights: $e');
       VLoaders.errorSnackBar(
@@ -207,30 +137,12 @@ class DeviceController extends GetxController {
           .listen((QuerySnapshot querySnapshot) {
         if (querySnapshot.docs.isNotEmpty) {
           final latestDocId = querySnapshot.docs.first;
-
-          deviceAnomaly.value = latestDocId.data() as Map<String, dynamic>;
+          //deviceAnomaly.value = latestDocId.data() as Map<String, dynamic>;
           deviceAnomaly.assignAll(latestDocId.data() as Map<String, dynamic>);
           print('fetchDeviceAnomaly: deviceAnomaly updated: $deviceAnomaly');
-          //FirebaseFirestore.instance
-          //    .collection('anomalies')
-          //    .doc(latestDocId)
-          //    .snapshots()
-          //    .listen((DocumentSnapshot snapshot) {
-          //  if (snapshot.exists) {
-          //    deviceAnomaly.value = snapshot.data() as Map<String, dynamic>;
-          //  } else {
-          //    print('Document does not exist');
-          //  }
-          //});
         } else {
-          print('Anomaly Document does not exist');
+          print('No anomaly document found.');
         }
-        Future.delayed(Duration(seconds: 5), () {
-          deviceAnomaly.value = {
-            'ai_explanation':
-                'Power consumption (1400W) is higher than recent trends (1100-1300W). Check the connected appliance for malfunctions or excessive load. If the issue persists, schedule maintenance.'
-          };
-        });
       });
     } catch (e) {
       print('Error fetching device insights: $e');
@@ -246,6 +158,5 @@ class DeviceController extends GetxController {
   void onClose() {
     super.onClose();
     print('DeviceController onClose() called');
-    // ... your cleanup logic ...
   }
 }

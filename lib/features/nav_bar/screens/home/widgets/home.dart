@@ -28,9 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic>? lastAnomalyData;
+    //Map<String, dynamic>? lastAnomalyData;
     final dark = VHelperFunctions.isDarkMode(context);
-    //final controller = Get.put(UserController());
+    //final usercontroller = Get.put(UserController());
     final controller = Get.find<UserController>();
     final deviceController = Get.find<DeviceController>();
     //final deviceController = Get.put(DeviceController());
@@ -129,54 +129,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     SizedBox(height: 10),
-                    StreamBuilder<Map<String, dynamic>>(
-                      stream: Get.find<DeviceController>().deviceAnomaly.stream,
-                      builder: (context, snapshot) {
-                        print('snapshot state: ${snapshot.connectionState}');
-                        if (snapshot.hasError) {
-                          print("error found: ${snapshot.error}");
-                          return Text('Something went wrong: ${snapshot.error}',
-                              style: TextStyle(color: Colors.red));
-                        }
+                    Obx(() {
+                      final anomalyData = deviceController.deviceAnomaly;
 
-                        //if (snapshot.connectionState ==
-                        //    ConnectionState.waiting) {
-                        //  return CircularProgressIndicator();
-                        //}
-                        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                          lastAnomalyData = snapshot.data;
-                          final anomalyData = snapshot.data;
-                          final latestAnomalyData =
-                              anomalyData?['ai_explanation'];
-
-                          if (latestAnomalyData != null) {
-                            return Text(
-                              '$latestAnomalyData',
-                              style: TextStyle(
-                                  color: dark ? VColors.grey : VColors.black),
-                            );
-                          } else {
-                            return Text('No Data Available');
-                          }
-                        } else if (lastAnomalyData != null) {
-                          final latestAnomalyData =
-                              lastAnomalyData?['ai_explanation'];
-                          if (latestAnomalyData != null) {
-                            return Text(
-                              '$latestAnomalyData',
-                              style: TextStyle(
-                                  color: dark ? VColors.grey : VColors.black),
-                            );
-                          } else {
-                            return Text('No Data Available');
-                          }
-                        } else {
-                          return const Text(
-                               'error in fetcing data')
-                              //'Power consumption (1400W) is higher than recent trends (1100-1300W). Check the connected appliance for malfunctions or excessive load. If the issue persists, schedule maintenance.');
-                        }
-                      },
-                    )
+                      if (anomalyData.isEmpty ||
+                          anomalyData['ai_explanation'] == null) {
+                        return Text('No anomaly data available.');
+                      }
+                      return Text('${anomalyData['ai_explanation']}',
+                          style: TextStyle(
+                              color: dark ? VColors.grey : VColors.black));
+                    })
                   ],
                 ),
               ),
@@ -289,7 +252,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),*/
                   const SizedBox(height: 10),
                   StreamBuilder<Map<String, dynamic>>(
-                    stream: deviceController.devValues.stream,
+                    stream:
+                        deviceController.deviceDataStream, //devValues.stream,
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return Text('Something went wrong: ${snapshot.error}');
@@ -304,10 +268,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                       // ignore: invalid_use_of_protected_member
                       final device = snapshot.data!;
-                      final voltage = device['voltage'];
+                      final voltage = (device['voltage'] as num).toDouble();
                       //final current = device.status == false ? 0.0 : device.current;
-                      final current = device['current'];
-                      final power = device['power'];
+                      final current = (device['current'] as num).toDouble();
+                      final power = (device['power'] as num).toDouble();
                       //final power = device.status == false ? 0.0 : device.power;
 
                       return GridView.count(
@@ -320,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           SensorCard(
                             title: "Voltage",
-                            value: voltage.toStringAsFixed(2),
+                            value: '${voltage.toStringAsFixed(2)} V',
                             icon: Icons.bolt,
                             color: Colors.orange,
                             backgroundColor: dark
@@ -329,7 +293,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           SensorCard(
                             title: "Current",
-                            value: current.toStringAsFixed(2),
+                            value: '${current.toStringAsFixed(2)} A',
                             icon: Icons.electric_meter,
                             color: Colors.blue,
                             backgroundColor: dark
@@ -338,7 +302,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           SensorCard(
                             title: "Power",
-                            value: power.toStringAsFixed(2),
+                            value: '${power.toStringAsFixed(2)} KWh',
                             icon: Icons.power,
                             color: Colors.green,
                             backgroundColor: dark
@@ -348,7 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           SensorCard(
                             title: "Total Power",
                             value:
-                                '${deviceController.totalPower.value.toStringAsFixed(2)} kWh',
+                                '${deviceController.totalPower.value.toStringAsFixed(2)} KWh',
                             icon: Icons.power_input_outlined,
                             color: Colors.purple,
                             backgroundColor: dark

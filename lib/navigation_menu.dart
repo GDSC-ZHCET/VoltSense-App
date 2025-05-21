@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 //import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:voltsense2/data/devices/device_controller/device_controller.dart';
-import 'package:voltsense2/features/nav_bar/screens/graph/controller/graph_data_controller.dart';
 import 'package:voltsense2/features/nav_bar/screens/graph/graph.dart';
+//import 'package:voltsense2/features/nav_bar/screens/graph/graph.dart';
 import 'package:voltsense2/features/nav_bar/screens/home/widgets/home.dart';
 //import 'package:voltsense2/features/nav_bar/screens/settings/profile.dart';
 import 'package:voltsense2/features/nav_bar/screens/settings/settings.dart';
-import 'package:voltsense2/features/personalization/controller/user_controller.dart';
+//import 'package:voltsense2/features/personalization/controller/user_controller.dart';
 import 'package:voltsense2/utils/helpers/helper_functions.dart';
 import 'package:voltsense2/utils/constants/colors.dart';
 
@@ -58,9 +56,9 @@ class NavigationMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final deviceController = Get.put(DeviceController());
-    final controller = Get.put(UserController());
-    final graphController = Get.put(GraphDataController());
+    //final deviceController = Get.put(DeviceController());
+    //final controller = Get.put(UserController());
+    //final graphController = Get.put(GraphDataController());
     return DefaultTabController(
       length: 3,
       child: Scaffold(

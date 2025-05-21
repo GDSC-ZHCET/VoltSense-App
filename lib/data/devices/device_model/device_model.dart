@@ -5,7 +5,7 @@ class DeviceModel {
   final double voltage;
   final double current;
   final double power;
-  String status;
+  bool status;
   final String lastUpdated;
   final String devInsights;
 
@@ -27,7 +27,7 @@ class DeviceModel {
       voltage: data['voltage'] ?? 0.0,
       current: data['current'] ?? 0.0,
       power: data['power'] ?? 0.0,
-      status: data['status'] ?? '',
+      status: data['status'] ?? false,
       devInsights: data['response'] ?? '',
       lastUpdated: data['last_updated'] ?? '',
     );
@@ -37,12 +37,12 @@ class DeviceModel {
   factory DeviceModel.fromMap(Map<String, dynamic> data) {
     return DeviceModel(
       deviceId: data['device_id'] ?? '',
-      voltage: data['voltage'] ?? 0.0,
-      current: data['current'] ?? 0.0,
-      power: data['power'] ?? 0.0,
-      status: data['status'] ?? '',
+      voltage: (data['voltage'] as num?)?.toDouble() ?? 0.0,
+      current: (data['current'] as num?)?.toDouble() ?? 0.0,
+      power: (data['power'] as num?)?.toDouble() ?? 0.0,
+      status: data['status'] is bool ? data['status'] : false,
       devInsights: data['response'] ?? '',
-      lastUpdated: data['last_updated'] ?? '',
+      lastUpdated: data['last_updated']?.toString() ?? '',
     );
   }
 
