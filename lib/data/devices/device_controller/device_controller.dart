@@ -32,10 +32,13 @@ class DeviceController extends GetxController {
     print('calculating total power...');
     calculateTotalPowerStream();
     print('void init called');
+    startStatusStream();
+    print('DeviceController onInit() called');
   }
 
   // Firestore se device data ko fetch karna
   RxMap<String, dynamic> devValues = RxMap<String, dynamic>();
+  final RxBool deviceStatus = false.obs;
   RxDouble totalPower = 0.0.obs;
 
   //Using streamBuilder function
@@ -54,6 +57,17 @@ class DeviceController extends GetxController {
       } else {
         return {};
       }
+    });
+  }
+
+  void startStatusStream() {
+    FirebaseFirestore.instance
+        .collection('devices')
+        .doc('ESP32_TEST_DEVICE')
+        .snapshots()
+        .listen((snapshot) {
+      final data = snapshot.data() as Map<String, dynamic>;
+      deviceStatus.value = data['status'] ?? false;
     });
   }
 
@@ -81,21 +95,21 @@ class DeviceController extends GetxController {
     });
   }
 
-  Future<void> updateDeviceStatus(String status) async {
-    try {
-      await _firestore.collection('devices').doc('ESP32_TEST_DEVICE').update({
-        'status': status,
-      });
-      // Optionally update the local 'device' state
-      device.value.status = (status.toLowerCase() == 'true');
-    } catch (e) {
-      print("Error updating device status: $e");
-      VLoaders.errorSnackBar(
-        title: 'Error in updating device status',
-        message: 'Something went wrong. please re-connect your device',
-      );
-    }
-  }
+  //Future<void> updateDeviceStatus(String status) async {
+  //  try {
+  //    await _firestore.collection('devices').doc('ESP32_TEST_DEVICE').update({
+  //      'status': status,
+  //    });
+  //    // Optionally update the local 'device' state
+  //    device.value.status = (status.toLowerCase() == 'true');
+  //  } catch (e) {
+  //    print("Error updating device status: $e");
+  //    VLoaders.errorSnackBar(
+  //      title: 'Error in updating device status',
+  //      message: 'Something went wrong. please re-connect your device',
+  //    );
+  //  }
+  //}
 
   // function to fetch device insights from firestore
   RxMap<String, dynamic> deviceInsights = RxMap<String, dynamic>();

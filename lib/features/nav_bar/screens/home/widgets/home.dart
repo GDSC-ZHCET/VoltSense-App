@@ -268,10 +268,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                       // ignore: invalid_use_of_protected_member
                       final device = snapshot.data!;
+                      final bool boolStatus = device['status'] ?? false;
                       final voltage = (device['voltage'] as num).toDouble();
                       //final current = device.status == false ? 0.0 : device.current;
-                      final current = (device['current'] as num).toDouble();
-                      final power = (device['power'] as num).toDouble();
+                      final current = boolStatus
+                          ? (device['current'] as num).toDouble()
+                          : 0.0;
+                      final power = boolStatus
+                          ? (device['power'] as num).toDouble()
+                          : 0.0;
+                      print(
+                          "status: $boolStatus, current: ${device['current']}, power: ${device['power']}");
                       //final power = device.status == false ? 0.0 : device.power;
 
                       return GridView.count(
@@ -302,7 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           SensorCard(
                             title: "Power",
-                            value: '${power.toStringAsFixed(2)} KWh',
+                            value: '${power.toStringAsFixed(2)} W',
                             icon: Icons.power,
                             color: Colors.green,
                             backgroundColor: dark
