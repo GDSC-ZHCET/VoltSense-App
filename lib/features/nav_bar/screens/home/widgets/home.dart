@@ -84,6 +84,100 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+            const SizedBox(height: 1),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: dark
+                      ? VColors.darkGrey.withOpacity(
+                          0.0) // Colors.transparent //VColors.darkGrey.withOpacity(0.0)
+                      : VColors.darkGrey.withOpacity(
+                          0.1), // Colors.transparent, //VColors.darkGrey.withOpacity(0.0),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.0),
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.devices,
+                            color: dark ? VColors.grey : VColors.black),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Connected Device:',
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: dark ? VColors.grey : VColors.black,
+                                  ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'esp32_test_device',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: dark ? VColors.grey : VColors.black,
+                          ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            // Add your device addition logic here
+                            print('Add Device clicked');
+                          },
+                          icon: Padding(
+                            padding: const EdgeInsets.only(left: 20.0),
+                            child: const Icon(Icons.add),
+                          ),
+                          label: Padding(
+                            padding: const EdgeInsets.only(right: 20.0),
+                            child: const Text('Add '),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: VColors.black,
+                          ),
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            // Add your device removal logic here
+                            print('Remove Device clicked');
+                          },
+                          icon: Padding(
+                            padding: const EdgeInsets.only(left: 20.0),
+                            child: const Icon(Icons.remove),
+                          ),
+                          label: Padding(
+                            padding: const EdgeInsets.only(right: 20.0),
+                            child: const Text('Remove '),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: VColors.error,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+
             const SizedBox(height: 15),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
